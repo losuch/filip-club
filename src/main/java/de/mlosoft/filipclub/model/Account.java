@@ -1,7 +1,5 @@
 package de.mlosoft.filipclub.model;
 
-import java.util.Set;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -26,7 +24,7 @@ public class Account {
   @Email
   private String email;
 
-  private Set<String> role;
+  private String role;
 
   @NotBlank
   @Size(min = 6, max = 40)
