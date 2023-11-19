@@ -8,4 +8,5 @@
                         ">
 
     <include file="./objects/changelog-0.xml" />
+    <include file="./data/data-0.xml" />
 </databaseChangeLog>

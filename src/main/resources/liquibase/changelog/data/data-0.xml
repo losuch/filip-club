@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
+                        ">
+
+    <changeSet author="losuch" id="lo-3">
+        <insert dbms="all" schemaName="public" tableName="account">
+            <column name="email" value="test1@mail.com" />
+            <column name="hashed_password" value="slkdfsdfjgjhbvreuzg" />
+            <column name="role" value="ADMIN" />
+        </insert>
+        <insert dbms="all" schemaName="public" tableName="account">
+            <column name="email" value="test2@mail.com" />
+            <column name="hashed_password" value="slkdfsdfjgjhbvreuzg" />
+            <column name="role" value="USER" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>
