@@ -1,0 +1,8 @@
+<mapping>
+    <class-a>de.mlosoft.filipclub.model.Account</class-a>
+    <class-b>de.mlosoft.filipclub.entity.AccountEntity</class-b>
+    <field>
+        <a>password</a>
+        <b>hashedPassword</b>
+    </field>
+</mapping>

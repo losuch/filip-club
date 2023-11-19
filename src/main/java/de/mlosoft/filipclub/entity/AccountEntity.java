@@ -13,16 +13,18 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "account")
 public class AccountEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@SequenceGenerator(name = "account_account_id_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_account_id_seq")
+	@SequenceGenerator(name = "account_account_id_seq", sequenceName = "account_account_id_seq", allocationSize = 1)
 	@Column(name = "account_id")
 	private long accountId;
 	private String hashedPassword;
