@@ -29,4 +29,9 @@
             <column name="email" />
         </createIndex>
     </changeSet>
+    <changeSet author="losuch" id="lo-3">
+        <createSequence cacheSize="20" cycle="false" dataType="bigint" incrementBy="1"
+            maxValue="1999999999" minValue="1000000001"
+            sequenceName="account_account_id_seq" startValue="1000000001" />
+    </changeSet>
 </databaseChangeLog>

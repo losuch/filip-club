@@ -7,7 +7,7 @@
                         http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd
                         ">
 
-    <changeSet author="losuch" id="lo-3">
+    <changeSet author="losuch" id="lo-4">
         <insert dbms="all" schemaName="public" tableName="account">
             <column name="email" value="test1@mail.com" />
             <column name="hashed_password" value="slkdfsdfjgjhbvreuzg" />

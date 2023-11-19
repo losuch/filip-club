@@ -19,6 +19,8 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Account {
 
+  private long accountId;
+
   @NotBlank
   @Size(max = 50)
   @Email

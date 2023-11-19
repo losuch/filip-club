@@ -6,4 +6,6 @@ import de.mlosoft.filipclub.model.Account;
 
 public interface AccountService {
     public List<Account> getAllAccounts();
+
+    public Account getAccountById(long accountId);
 }
