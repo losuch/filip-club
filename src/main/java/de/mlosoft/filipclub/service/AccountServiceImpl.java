@@ -11,6 +11,9 @@ import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 
 import de.mlosoft.filipclub.entity.AccountEntity;
+import de.mlosoft.filipclub.error.ErrorCode;
+import de.mlosoft.filipclub.error.ErrorInfo;
+import de.mlosoft.filipclub.error.FilipClubException;
 import de.mlosoft.filipclub.model.Account;
 import de.mlosoft.filipclub.persistance.AccountRepository;
 import de.mlosoft.filipclub.util.DozerHelper;
@@ -61,17 +64,24 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createAccount(Account account) {
+
         // check if user already exists
-        List<AccountEntity> response = accountRepository.findAccountByEmail(account.getEmail());
-
-        if (!response.isEmpty()) {
-
-            throw new UnsupportedOperationException("User already exist");
+        try {
+            accountRepository.findAccountByEmail(account.getEmail());
+        } catch (FilipClubException f) {
+            if (f.getErrorInfo().getErrorCode().equals(ErrorCode.USER_NOT_FOUND.name())) {
+                // user not exists we can proceed
+                AccountEntity entityRequest = mapper.map(account, AccountEntity.class);
+                entityRequest.setHashedPassword(account.getPassword());
+                AccountEntity entityResponse = accountRepository.createAccount(entityRequest);
+                return mapper.map(entityResponse, Account.class);
+            }
         }
-        AccountEntity entityRequest = mapper.map(account, AccountEntity.class);
-        entityRequest.setHashedPassword(account.getPassword());
-        AccountEntity entityResponse = accountRepository.createAccount(entityRequest);
-        return mapper.map(entityResponse, Account.class);
+        // if user found throw exeption - user already exists
+        LOG.warn("AccountRepository createAccount user already exists for email: {}", account.getEmail());
+        ErrorInfo info = new ErrorInfo(ErrorCode.USER_ALREADY_EXISTS.name());
+        info.setAdditionalInfo(ErrorCode.USER_ALREADY_EXISTS.name(), account.getEmail());
+        throw new FilipClubException(info);
     }
 
     @Override

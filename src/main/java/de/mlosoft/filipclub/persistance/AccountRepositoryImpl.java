@@ -77,19 +77,42 @@ public class AccountRepositoryImpl implements AccountRepository {
         Query query = em.createQuery("SELECT a FROM AccountEntity a WHERE a.email=:email")
                 .setParameter("email", email);
 
-        @SuppressWarnings("unchecked")
-        List<AccountEntity> result = (List<AccountEntity>) query.getResultList();
-
-        return result;
+        try {
+            @SuppressWarnings("unchecked")
+            List<AccountEntity> result = (List<AccountEntity>) query.getResultList();
+            if (result.isEmpty()) {
+                // no user found
+                ErrorInfo info = new ErrorInfo(ErrorCode.USER_NOT_FOUND.name());
+                info.setAdditionalInfo("no user fount for email:", email);
+                throw new FilipClubException(info);
+            }
+            return result;
+        } catch (FilipClubException f) {
+            LOG.warn("AccountRepository findAccountByEmail {}", f.getMessage());
+            throw f;
+        } catch (Exception e) {
+            LOG.error("AccountRepository findAccountByEmail: {}", e.getMessage());
+            ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
+            info.setAdditionalInfo(ErrorCode.DB_ERROR.name(), e.getMessage());
+            throw new FilipClubException(info, e);
+        }
     }
 
     @Override
     @Transactional
     public AccountEntity createAccount(AccountEntity account) {
-        LOG.debug("AccountRepository - createAccount A: {}", account.toString());
-        AccountEntity accountEntity = em.merge(account);
-        flushAndClear();
-        return accountEntity;
+
+        LOG.debug("AccountRepository - createAccount: {}", account.toString());
+        try {
+            AccountEntity accountEntity = em.merge(account);
+            flushAndClear();
+            return accountEntity;
+        } catch (Exception e) {
+            LOG.error("AccountRepository createAccount: {}", e.getMessage());
+            ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
+            info.setAdditionalInfo(ErrorCode.DB_ERROR.name(), e.getMessage());
+            throw new FilipClubException(info, e);
+        }
     }
 
     @Override
@@ -97,24 +120,35 @@ public class AccountRepositoryImpl implements AccountRepository {
     public AccountEntity updateAccount(AccountEntity account, long accountId) {
 
         AccountEntity accountEntity;
+        try {
+            @SuppressWarnings("unchecked")
+            List<AccountEntity> result = (List<AccountEntity>) em.createQuery(
+                    "SELECT a FROM AccountEntity a WHERE a.accountId = :accountId")
+                    .setParameter("accountId", accountId).getResultList();
+            if (result.size() == 1) {
 
-        @SuppressWarnings("unchecked")
-        List<AccountEntity> result = (List<AccountEntity>) em.createQuery(
-                "SELECT a FROM AccountEntity a WHERE a.accountId = :accountId")
-                .setParameter("accountId", accountId).getResultList();
-        if (result.size() == 1) {
+                // update role
+                accountEntity = result.get(0);
+                accountEntity.setRole(account.getRole());
 
-            // update
-            accountEntity = result.get(0);
-            accountEntity.setRole(account.getRole());
-
-        } else {
-
-            throw new UnsupportedOperationException("User not found");
+            } else {
+                // no user found
+                ErrorInfo info = new ErrorInfo(ErrorCode.USER_NOT_FOUND.name());
+                info.setAdditionalInfo("no user fount for accountId:", String.valueOf(accountId));
+                throw new FilipClubException(info);
+            }
+            flushAndClear();
+            LOG.debug("AccountRepositoryImpl updateAccount return: {}", accountEntity.toString());
+            return accountEntity;
+        } catch (FilipClubException f) {
+            LOG.warn("AccountRepository updateAccou: {}", f.getMessage());
+            throw f;
+        } catch (Exception e) {
+            LOG.error("AccountRepository updateAccount: {}", e.getMessage());
+            ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
+            info.setAdditionalInfo(ErrorCode.DB_ERROR.name(), e.getMessage());
+            throw new FilipClubException(info, e);
         }
-        flushAndClear();
-        LOG.debug("AccountRepositoryImpl updateAccount return: {}", accountEntity.toString());
-        return accountEntity;
     }
 
     @Override
@@ -123,17 +157,28 @@ public class AccountRepositoryImpl implements AccountRepository {
         Query query = em.createQuery("SELECT a FROM AccountEntity a WHERE a.accountId = :accountId");
         query.setParameter("accountId", accountId);
 
-        @SuppressWarnings("unchecked")
-        List<AccountEntity> result = (List<AccountEntity>) query.getResultList();
-        if (result.isEmpty()) {
-            LOG.warn("User not found for accountId: {}", accountId);
-            throw new UnsupportedOperationException("User not found");
+        try {
+            @SuppressWarnings("unchecked")
+            List<AccountEntity> result = (List<AccountEntity>) query.getResultList();
+            if (result.isEmpty()) {
+                // no user found
+                ErrorInfo info = new ErrorInfo(ErrorCode.USER_NOT_FOUND.name());
+                info.setAdditionalInfo("no user fount for accountId:", String.valueOf(accountId));
+                throw new FilipClubException(info);
+            }
+            AccountEntity userEntity = result.get(0);
+
+            em.remove(userEntity);
+            flushAndClear();
+        } catch (FilipClubException f) {
+            LOG.warn("AccountRepository deleteAccount: {}", f.getMessage());
+            throw f;
+        } catch (Exception e) {
+            LOG.error("AccountRepository deleteAccount: {}", e.getMessage());
+            ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
+            info.setAdditionalInfo(ErrorCode.DB_ERROR.name(), e.getMessage());
+            throw new FilipClubException(info, e);
         }
-
-        AccountEntity userEntity = result.get(0);
-
-        em.remove(userEntity);
-        flushAndClear();
     }
 
     private void flushAndClear() {
