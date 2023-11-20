@@ -2,13 +2,15 @@ package de.mlosoft.filipclub.persistance;
 
 import java.util.List;
 
-import org.antlr.v4.runtime.atn.ErrorInfo;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.mlosoft.filipclub.entity.AccountEntity;
+import de.mlosoft.filipclub.error.ErrorCode;
+import de.mlosoft.filipclub.error.ErrorInfo;
+import de.mlosoft.filipclub.error.FilipClubException;
 import de.mlosoft.filipclub.util.LogUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -28,11 +30,16 @@ public class AccountRepositoryImpl implements AccountRepository {
     public List<AccountEntity> getAllAccounts() {
         LOG.debug("AccountRepository - getAllAccounts");
         Query query = em.createQuery("SELECT a FROM AccountEntity a");
-
-        @SuppressWarnings("unchecked")
-        List<AccountEntity> result = (List<AccountEntity>) query.getResultList();
-
-        return result;
+        try {
+            @SuppressWarnings("unchecked")
+            List<AccountEntity> result = (List<AccountEntity>) query.getResultList();
+            return result;
+        } catch (Exception e) {
+            LOG.error("AccountRepository getAllAccounts: {}", e.getMessage());
+            ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
+            info.setAdditionalInfo(ErrorCode.DB_ERROR.name(), e.getMessage());
+            throw new FilipClubException(info, e);
+        }
     }
 
     @Override
@@ -42,10 +49,25 @@ public class AccountRepositoryImpl implements AccountRepository {
         Query query = em.createQuery("SELECT a FROM AccountEntity a WHERE a.accountId=:accountId")
                 .setParameter("accountId", accountId);
 
-        @SuppressWarnings("unchecked")
-        List<AccountEntity> result = (List<AccountEntity>) query.getResultList();
-
-        return result;
+        try {
+            @SuppressWarnings("unchecked")
+            List<AccountEntity> result = (List<AccountEntity>) query.getResultList();
+            if (result.isEmpty()) {
+                // no user found
+                ErrorInfo info = new ErrorInfo(ErrorCode.USER_NOT_FOUND.name());
+                info.setAdditionalInfo("no user fount for accountId:", String.valueOf(accountId));
+                throw new FilipClubException(info);
+            }
+            return result;
+        } catch (FilipClubException f) {
+            LOG.warn("AccountRepository findAccountById {}", f.getMessage());
+            throw f;
+        } catch (Exception e) {
+            LOG.error("AccountRepository findAccountById: {}", e.getMessage());
+            ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
+            info.setAdditionalInfo(ErrorCode.DB_ERROR.name(), e.getMessage());
+            throw new FilipClubException(info, e);
+        }
     }
 
     @Override

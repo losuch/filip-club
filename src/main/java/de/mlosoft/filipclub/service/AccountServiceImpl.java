@@ -36,6 +36,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         List<Account> accounts = DozerHelper.map(mapper, response, Account.class);
+        LOG.debug("AccountService getAllAccounts: {}", accounts.toString());
         return accounts;
     }
 
