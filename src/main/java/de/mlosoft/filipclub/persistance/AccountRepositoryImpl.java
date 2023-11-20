@@ -83,7 +83,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             if (result.isEmpty()) {
                 // no user found
                 ErrorInfo info = new ErrorInfo(ErrorCode.USER_NOT_FOUND.name());
-                info.setAdditionalInfo("no user fount for email:", email);
+                info.setAdditionalInfo("user not for email:", email);
                 throw new FilipClubException(info);
             }
             return result;

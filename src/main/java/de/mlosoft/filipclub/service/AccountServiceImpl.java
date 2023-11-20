@@ -35,7 +35,9 @@ public class AccountServiceImpl implements AccountService {
         List<AccountEntity> response = accountRepository.getAllAccounts();
 
         if (response.isEmpty()) {
-
+            // user not found
+            ErrorInfo info = new ErrorInfo(ErrorCode.USER_NOT_FOUND.name());
+            throw new FilipClubException(info);
         }
 
         List<Account> accounts = DozerHelper.map(mapper, response, Account.class);
@@ -50,7 +52,9 @@ public class AccountServiceImpl implements AccountService {
         if (result.size() == 1) {
             return mapper.map(result.get(0), Account.class);
         }
-        throw new UnsupportedOperationException("Unimplemented method 'getAccountById'");
+        ErrorInfo info = new ErrorInfo(ErrorCode.UNKNOWN_ERROR.name());
+        info.setAdditionalInfo("found more then one user for accountId:", String.valueOf(accountId));
+        throw new FilipClubException(info);
     }
 
     public Account getAccountByEmail(String email) {
@@ -59,7 +63,9 @@ public class AccountServiceImpl implements AccountService {
         if (response.size() == 1) {
             return mapper.map(response.get(0), Account.class);
         }
-        throw new UnsupportedOperationException("Unimplemented method 'getAccountByEmail'");
+        ErrorInfo info = new ErrorInfo(ErrorCode.UNKNOWN_ERROR.name());
+        info.setAdditionalInfo("found more then one user for email:", email);
+        throw new FilipClubException(info);
     }
 
     @Override
