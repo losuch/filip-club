@@ -20,7 +20,7 @@ import de.mlosoft.filipclub.util.RandomAccounnt;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
-class FilipClubApplicationTests {
+class AccountServiceTests {
 
 	@Autowired(required = true)
 	private AccountService accountService;
