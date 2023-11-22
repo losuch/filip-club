@@ -22,7 +22,7 @@ import de.mlosoft.filipclub.service.AccountService;
 import de.mlosoft.filipclub.util.LogUtil;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 @CrossOrigin()
 public class AccountController {
 

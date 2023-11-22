@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,7 +35,18 @@ public class JwtUserDetailsService implements UserDetailsService {
 		if (!accountEntityList.isEmpty()) {
 			AccountEntity accountEntity = accountEntityList.get(0);
 
-			return new User(accountEntity.getEmail(), accountEntity.getHashedPassword(), new ArrayList<>());
+			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>() {
+				{
+					add(new SimpleGrantedAuthority(accountEntity.getRole()));
+				}
+			};
+
+			// GrantedAuthority authority = new
+			// SimpleGrantedAuthority(accountEntity.getRole());
+			UserDetails userDetails = new User(accountEntity.getEmail(), accountEntity.getHashedPassword(),
+					authorities);
+			LOG.debug("JwtUserDetailsServiceu loadUserByUsername: {}", userDetails.toString());
+			return userDetails;
 
 		} else {
 			LOG.warn("User not found with username: {}", username);
