@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
@@ -29,6 +30,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @Override
     public List<Account> getAllAccounts() {
@@ -78,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
             if (f.getErrorInfo().getErrorCode().equals(ErrorCode.USER_NOT_FOUND.name())) {
                 // user not exists we can proceed
                 AccountEntity entityRequest = mapper.map(account, AccountEntity.class);
-                entityRequest.setHashedPassword(account.getPassword());
+                entityRequest.setHashedPassword(encoder.encode((account.getPassword())));
                 AccountEntity entityResponse = accountRepository.createAccount(entityRequest);
                 return mapper.map(entityResponse, Account.class);
             }
