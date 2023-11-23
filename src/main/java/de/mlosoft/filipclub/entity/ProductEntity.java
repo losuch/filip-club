@@ -32,6 +32,7 @@ public class ProductEntity {
 
     @Column(name = "images_url")
     private String imagesUrl;
+    private int price;
     private int active;
 
     @CreationTimestamp

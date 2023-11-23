@@ -14,13 +14,16 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="description" type="VARCHAR(255)">
+            <column name="description" type="VARCHAR(4096)">
                 <constraints nullable="true" />
             </column>
             <column name="images_url" type="VARCHAR(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="active" type="number">
+            <column name="price" type="NUMBER">
+                <constraints nullable="false" />
+            </column>
+            <column name="active" type="NUMBER">
                 <constraints nullable="false" />
             </column>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE"

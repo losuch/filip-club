@@ -105,6 +105,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 productEntity.setDescription(product.getDescription());
                 productEntity.setActive(product.getActive());
                 productEntity.setImagesUrl(product.getImagesUrl());
+                productEntity.setPrice(product.getPrice());
 
             } else {
                 // no user found

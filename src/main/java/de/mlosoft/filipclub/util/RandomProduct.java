@@ -19,6 +19,7 @@ public class RandomProduct {
         product.setDescription(faker.pokemon().name());
         product.setImagesUrl(faker.file().fileName());
         product.setActiv(0);
+        product.setPrice(faker.number().randomDigit());
         return product;
     }
 }

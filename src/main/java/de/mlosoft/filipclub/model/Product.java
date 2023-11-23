@@ -28,6 +28,9 @@ public class Product {
 
     @Column(name = "images_url")
     private String imagesUrl;
+
+    @NotBlank
+    private int price;
     private int activ;
 
     @CreationTimestamp

@@ -8,14 +8,18 @@
                         ">
 
     <changeSet author="losuch" id="lo-4">
+        <!-- password: admin -->
         <insert dbms="all" schemaName="public" tableName="account">
-            <column name="email" value="test1@mail.com" />
-            <column name="hashed_password" value="slkdfsdfjgjhbvreuzg" />
+            <column name="email" value="admin@mail.com" />
+            <column name="hashed_password"
+                value="$2a$10$PTSCbxMIuZeR/RLJC/c0m.DNYdOVBhzc5Kl4EtvyVvvFmmsfhg1by" />
             <column name="role" value="ADMIN" />
         </insert>
+        <!-- password: user -->
         <insert dbms="all" schemaName="public" tableName="account">
-            <column name="email" value="test2@mail.com" />
-            <column name="hashed_password" value="slkdfsdfjgjhbvreuzg" />
+            <column name="email" value="user@mail.com" />
+            <column name="hashed_password"
+                value="$2a$10$7sLGxpg5WZlpYc1nuFKkze0ppjpYcZ9X3J4tS8v5C/a3Lp1t0KSyO" />
             <column name="role" value="USER" />
         </insert>
     </changeSet>
