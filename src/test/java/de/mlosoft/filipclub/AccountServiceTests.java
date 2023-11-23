@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import de.mlosoft.filipclub.error.FilipClubException;
 import de.mlosoft.filipclub.model.Account;
 import de.mlosoft.filipclub.service.AccountService;
-import de.mlosoft.filipclub.util.RandomAccounnt;
+import de.mlosoft.filipclub.util.RandomAccount;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -35,7 +35,7 @@ class AccountServiceTests {
 	@Test
 	@Order(2)
 	public void testCreateAccount() {
-		RandomAccounnt randomAccount = new RandomAccounnt();
+		RandomAccount randomAccount = new RandomAccount();
 
 		Account account = randomAccount.createRandomAccount();
 		Account account2 = accountService.createAccount(account);

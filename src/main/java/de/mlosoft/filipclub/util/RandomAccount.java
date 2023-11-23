@@ -4,10 +4,10 @@ import com.github.javafaker.Faker;
 
 import de.mlosoft.filipclub.model.Account;
 
-public class RandomAccounnt {
+public class RandomAccount {
     private Faker faker;
 
-    public RandomAccounnt() {
+    public RandomAccount() {
         super();
         this.faker = new Faker();
     }
