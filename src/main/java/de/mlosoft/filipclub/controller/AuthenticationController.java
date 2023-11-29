@@ -2,6 +2,7 @@ package de.mlosoft.filipclub.controller;
 
 import java.util.Objects;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import de.mlosoft.filipclub.model.Account;
 import de.mlosoft.filipclub.model.JwtRequest;
 import de.mlosoft.filipclub.model.JwtResponse;
 import de.mlosoft.filipclub.service.AccountService;
+import de.mlosoft.filipclub.util.LogUtil;
 
 /***
  * Controller class responsible for sign-in and sign-up processes
@@ -33,6 +35,8 @@ import de.mlosoft.filipclub.service.AccountService;
 @RequestMapping("/api")
 @CrossOrigin
 public class AuthenticationController {
+
+	private static final Logger LOG = LogUtil.getLogger();
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -69,7 +73,7 @@ public class AuthenticationController {
 
 		UserDetails userDetails = jwtInMemoryUserDetailsService
 				.loadUserByUsername(authenticationRequest.getEmail());
-
+		LOG.debug("createAuthenticationToken: {}", userDetails.toString());
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
 		return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));

@@ -1,15 +1,20 @@
 package de.mlosoft.filipclub.config;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import de.mlosoft.filipclub.util.LogUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,6 +25,8 @@ public class JwtTokenUtil implements Serializable {
 	private static final long serialVersionUID = -2550185165626007488L;
 
 	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+
+	private static final Logger LOG = LogUtil.getLogger();
 
 	@Value("${jwt.secret}")
 	private String secret;
@@ -57,6 +64,11 @@ public class JwtTokenUtil implements Serializable {
 
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
+		Collection<GrantedAuthority> authorities = new ArrayList<>(userDetails.getAuthorities());
+
+		for (GrantedAuthority grantedAuthority : authorities) {
+			claims.put("role", grantedAuthority.getAuthority());
+		}
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 

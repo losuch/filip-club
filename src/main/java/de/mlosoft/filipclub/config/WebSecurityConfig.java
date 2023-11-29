@@ -43,8 +43,10 @@ public class WebSecurityConfig {
 		// We don't need CSRF for this example
 		httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
 				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/api/health", "/api/signup", "/api/signin", "/swagger-ui/*")
-								.permitAll().requestMatchers("/api/admin/*").hasAnyAuthority("ADMIN")
+						auth -> auth
+								.requestMatchers("/api/health", "/api/signup", "/api/signin",
+										"/swagger-ui/*")
+								.permitAll().requestMatchers("/api/admin/*", "/api/authinfo").hasAnyAuthority("ADMIN")
 								.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated())
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
 				.sessionManagement()
