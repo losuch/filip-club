@@ -131,6 +131,10 @@ public class AccountRepositoryImpl implements AccountRepository {
                 accountEntity = result.get(0);
                 accountEntity.setRole(account.getRole());
 
+                if (account.getHashedPassword() != null) {
+                    accountEntity.setHashedPassword(account.getHashedPassword());
+                }
+
             } else {
                 // no user found
                 ErrorInfo info = new ErrorInfo(ErrorCode.USER_NOT_FOUND.name());

@@ -82,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
             if (f.getErrorInfo().getErrorCode().equals(ErrorCode.USER_NOT_FOUND.name())) {
                 // user not exists we can proceed
                 AccountEntity entityRequest = mapper.map(account, AccountEntity.class);
-                entityRequest.setHashedPassword(encoder.encode((account.getPassword())));
+                entityRequest.setHashedPassword(encoder.encode(account.getPassword()));
                 AccountEntity entityResponse = accountRepository.createAccount(entityRequest);
                 return mapper.map(entityResponse, Account.class);
             }
@@ -97,6 +97,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account updateAccount(Account account, long accountId) {
         AccountEntity accountEntity = mapper.map(account, AccountEntity.class);
+
+        // if password provided update hashed password
+        if (!"".equals(account.getPassword()) && account.getPassword() != null) {
+            LOG.info("update password for accountId: {}", accountId);
+            accountEntity.setHashedPassword(encoder.encode(account.getPassword()));
+        }
+
         AccountEntity accountEntityResponse = accountRepository.updateAccount(accountEntity, accountId);
         return mapper.map(accountEntityResponse, Account.class);
     }

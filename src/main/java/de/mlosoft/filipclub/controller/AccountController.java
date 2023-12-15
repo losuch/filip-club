@@ -2,6 +2,7 @@ package de.mlosoft.filipclub.controller;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import de.mlosoft.filipclub.model.AccountList;
 import de.mlosoft.filipclub.service.AccountService;
 import de.mlosoft.filipclub.util.LogUtil;
 
+@Secured("ADMIN")
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin()
@@ -31,6 +33,7 @@ public class AccountController {
     @Autowired(required = true)
     AccountService accountService;
 
+    @Secured("ADMIN")
     @GetMapping("/accounts")
     @JsonSerialize
     @ResponseBody

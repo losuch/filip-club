@@ -73,7 +73,7 @@ class AccountServiceTests {
 
 	@Test
 	@Order(6)
-	public void testUpdateAccount() {
+	public void testUpdateAccountEmail() {
 		String newEmail = "test@mail.com";
 		accountTest.setEmail(newEmail);
 		Account account = accountService.updateAccount(accountTest, accountTest.getAccountId());
@@ -83,6 +83,30 @@ class AccountServiceTests {
 
 	@Test
 	@Order(7)
+	public void testUpdateAccountPassword() {
+		String newEmail = "test2@mail.com";
+		String newPassword = "test123";
+		accountTest.setEmail(newEmail);
+		accountTest.setPassword(newPassword);
+		Account account = accountService.updateAccount(accountTest, accountTest.getAccountId());
+		Account account2 = accountService.getAccountById(accountTest.getAccountId());
+		assertEquals(account.getRole(), account2.getRole());
+	}
+
+	@Test
+	@Order(8)
+	public void testUpdateAccountEmptyPassword() {
+		String newEmail = "test3@mail.com";
+		String newPassword = "";
+		accountTest.setEmail(newEmail);
+		accountTest.setPassword(newPassword);
+		Account account = accountService.updateAccount(accountTest, accountTest.getAccountId());
+		Account account2 = accountService.getAccountById(accountTest.getAccountId());
+		assertEquals(account.getRole(), account2.getRole());
+	}
+
+	@Test
+	@Order(9)
 	public void testdeleteAccount() {
 		List<Account> accounts = accountService.getAllAccounts();
 		assertNotEquals(0, accounts.size());
