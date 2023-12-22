@@ -38,3 +38,14 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
+
+      - name: Deploy into EC2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_ADDRESS: ${{ secrets.SERVER_ADDRESS }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > ssh_private_key && chmod 600 ssh_private_key
+          ssh -i ssh_private_key -o "StrictHostKeyChecking no" $SERVER_USER@$SERVER_ADDRESS 'mkdir application'
+          cat deploy.sh | ssh -i ssh_private_key -o "StrictHostKeyChecking no" $SERVER_USER@$SERVER_ADDRESS 'cat > ./application/deploy.sh'
+          ssh -i ssh_private_key -o "StrictHostKeyChecking no" $SERVER_USER@$SERVER_ADDRESS 'bash -c "cd application && chmod -R 755 ./deploy.sh && ./deploy.sh && cd .. && rm -rf application"'
