@@ -1,4 +1,8 @@
 version: '3.9'
+
+networks:
+  fc-network:
+
 services:
   postgres:
     image: postgres:15-alpine
@@ -8,12 +12,16 @@ services:
       - POSTGRES_DB=filip-club
     ports:
       - '5432:5432'
-  fc-api:
+    networks:
+      - fc-network
+  api:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - '8080:8080'
+    networks:
+      - fc-network
     depends_on:
       - postgres
     entrypoint: ['/app/wait-for.sh', 'postgres:5432', '--', '/app/start.sh']
