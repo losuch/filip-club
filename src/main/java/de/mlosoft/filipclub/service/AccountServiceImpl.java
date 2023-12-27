@@ -1,10 +1,15 @@
 package de.mlosoft.filipclub.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +35,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     PasswordEncoder encoder;
@@ -111,6 +119,38 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(long accountId) {
         accountRepository.deleteAccount(accountId);
+    }
+
+    @Override
+    public void updatePassword(String newPassword, String oldPassword, String email) throws Exception {
+
+        // verify old password
+        this.verifyPassword(email, oldPassword);
+
+        // find account and update password
+        List<AccountEntity> response = accountRepository.findAccountByEmail(email);
+
+        if (response.size() != 1) {
+            ErrorInfo info = new ErrorInfo(ErrorCode.UNKNOWN_ERROR.name());
+            info.setAdditionalInfo("found more then one user for email:", email);
+            throw new FilipClubException(info);
+        }
+        AccountEntity accountEntity = response.get(0);
+        accountEntity.setHashedPassword(encoder.encode(newPassword));
+        accountRepository.updateAccount(response.get(0), accountEntity.getAccountId());
+    }
+
+    private void verifyPassword(String username, String password) throws Exception {
+        Objects.requireNonNull(username);
+        Objects.requireNonNull(password);
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
     }
 
 }
