@@ -48,16 +48,7 @@ public class AuthenticationController {
 	private UserDetailsService jwtInMemoryUserDetailsService;
 
 	@Autowired
-	private AccountService accountService;
-
-	@Autowired
 	PasswordEncoder encoder;
-
-	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public ResponseEntity<?> registerUser(@RequestBody Account signupRequest) throws Exception {
-
-		return ResponseEntity.ok(accountService.createAccount(signupRequest));
-	}
 
 	/**
 	 * Sign-in REST controller

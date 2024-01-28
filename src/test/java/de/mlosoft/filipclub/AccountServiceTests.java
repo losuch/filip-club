@@ -107,6 +107,12 @@ class AccountServiceTests {
 
 	@Test
 	@Order(9)
+	public void testChangePassword() {
+
+	}
+
+	@Test
+	@Order(10)
 	public void testdeleteAccount() {
 		List<Account> accounts = accountService.getAllAccounts();
 		assertNotEquals(0, accounts.size());

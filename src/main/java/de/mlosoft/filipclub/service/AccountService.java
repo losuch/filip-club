@@ -16,4 +16,6 @@ public interface AccountService {
     public Account updateAccount(Account account, long accountId);
 
     public void deleteAccount(long accountId);
+
+    public void updatePassword(String newPassword, String oldPassword, String email) throws Exception;
 }

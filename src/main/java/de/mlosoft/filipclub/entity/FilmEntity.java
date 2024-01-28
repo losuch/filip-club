@@ -19,20 +19,19 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "product")
-public class ProductEntity {
+@Table(name = "film")
+public class FilmEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_product_id_seq")
-    @SequenceGenerator(name = "product_product_id_seq", sequenceName = "product_product_id_seq", allocationSize = 1)
-    @Column(name = "product_id")
-    private long productId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "film_film_id_seq")
+    @SequenceGenerator(name = "film_film_id_seq", sequenceName = "film_film_id_seq", allocationSize = 1)
+    @Column(name = "film_id")
+    private long filmId;
     private String name;
-    private String description;
+    private String type;
 
-    @Column(name = "images_url")
-    private String imagesUrl;
-    private int price;
+    @Column(name = "yt_link")
+    private String ytLink;
 
     // TODO fix activation flag
     private int active;
