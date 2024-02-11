@@ -12,5 +12,5 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class FilmList {
-    private List<Film> products;
+    private List<Film> films;
 }

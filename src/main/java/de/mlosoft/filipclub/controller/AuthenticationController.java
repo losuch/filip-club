@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.mlosoft.filipclub.config.JwtTokenUtil;
-import de.mlosoft.filipclub.model.Account;
 import de.mlosoft.filipclub.model.JwtRequest;
 import de.mlosoft.filipclub.model.JwtResponse;
-import de.mlosoft.filipclub.service.AccountService;
 import de.mlosoft.filipclub.util.LogUtil;
 
 /***
