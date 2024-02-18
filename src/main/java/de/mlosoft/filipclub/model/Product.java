@@ -31,7 +31,7 @@ public class Product {
 
     @NotBlank
     private int price;
-    private int activ;
+    private int active;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

@@ -42,7 +42,7 @@ public class ProductServiceTests {
 
         assertEquals(product.getName(), product2.getName());
         productTest = new Product(product2.getProductId(), product2.getName(), product2.getDescription(),
-                product2.getImagesUrl(), product2.getPrice(), product2.getActiv(), product2.getCreatedAt());
+                product2.getImagesUrl(), product2.getPrice(), product2.getActive(), product2.getCreatedAt());
     }
 
     @Test
