@@ -46,7 +46,7 @@ public class FilmServiceImplTest {
 
         assertFalse(films.isEmpty());
         assertEquals(filmEntity.getName(), films.get(0).getName());
-        assertEquals(filmEntity.getActive(), films.get(0).getActive());
+        assertEquals(filmEntity.getActive() == 1, films.get(0).isActive());
         verify(filmRepository, times(1)).getAllFilms();
     }
 

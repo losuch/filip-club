@@ -29,7 +29,7 @@ public class Film {
     @Column(name = "yt_link")
     private String ytLink;
 
-    private int active;
+    private boolean active;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
