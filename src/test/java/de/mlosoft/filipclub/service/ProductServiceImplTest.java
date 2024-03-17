@@ -40,6 +40,7 @@ public class ProductServiceImplTest {
     public void testCreateProduct() {
         Product product = new Product();
         product.setName("Test Product");
+        product.setActive(1);
         ProductEntity productEntity = new ProductEntity();
         productEntity.setName("Test Product");
         productEntity.setActive(1);

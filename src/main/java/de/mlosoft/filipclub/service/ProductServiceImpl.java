@@ -12,6 +12,7 @@ import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 
 import de.mlosoft.filipclub.entity.ProductEntity;
+import de.mlosoft.filipclub.entity.ProductTypeEntity;
 import de.mlosoft.filipclub.error.ErrorCode;
 import de.mlosoft.filipclub.error.ErrorInfo;
 import de.mlosoft.filipclub.error.FilipClubException;
@@ -64,7 +65,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product createProduct(Product product) {
 
+        // create product with the default product type
+        // ProductTypeEntity productType = productRepository.getProductTypeById(0);
         ProductEntity entityRequest = mapper.map(product, ProductEntity.class);
+        // entityRequest.setProductType(productType);
         ProductEntity entityResponse = productRepository.createProduct(entityRequest);
         return mapper.map(entityResponse, Product.class);
     }

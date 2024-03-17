@@ -50,7 +50,7 @@
     <changeSet author="losuch" id="lo-12">
         <insert tableName="product_type">
             <column name="type_id" value="0" />
-            <column name="type_name" value="SRP" />
+            <column name="type_name" value="General" />
         </insert>
         <insert tableName="product_type">
             <column name="type_id" value="1" />
@@ -58,7 +58,7 @@
         </insert>
         <insert tableName="product_type">
             <column name="type_id" value="2" />
-            <column name="type_name" value="Other" />
+            <column name="type_name" value="SRP" />
         </insert>
     </changeSet>
 
