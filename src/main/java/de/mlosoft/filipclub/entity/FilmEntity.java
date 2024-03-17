@@ -33,7 +33,6 @@ public class FilmEntity {
     @Column(name = "yt_link")
     private String ytLink;
 
-    // TODO fix activation flag
     private int active;
 
     @CreationTimestamp

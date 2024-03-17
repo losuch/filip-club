@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.mlosoft.filipclub.entity.ProductEntity;
+import de.mlosoft.filipclub.entity.ProductTypeEntity;
 import de.mlosoft.filipclub.error.ErrorCode;
 import de.mlosoft.filipclub.error.ErrorInfo;
 import de.mlosoft.filipclub.error.FilipClubException;
@@ -72,13 +73,17 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     @Transactional
-    public ProductEntity createProduct(ProductEntity Product) {
+    public ProductEntity createProduct(ProductEntity product) {
 
-        LOG.debug("ProductRepository - createProduct: {}", Product.toString());
+        LOG.debug("ProductRepository - createProduct: {}", product.toString());
         try {
-            ProductEntity ProductEntity = em.merge(Product);
+            // set product type to default: General
+            ProductTypeEntity productTypeEntity = em.find(ProductTypeEntity.class, 0L);
+            em.persist(productTypeEntity);
+            product.setProductType(productTypeEntity);
+            ProductEntity productEntity = em.merge(product);
             flushAndClear();
-            return ProductEntity;
+            return productEntity;
         } catch (Exception e) {
             LOG.error("ProductRepository createProduct: {}", e.getMessage());
             ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
@@ -151,6 +156,34 @@ public class ProductRepositoryImpl implements ProductRepository {
             throw f;
         } catch (Exception e) {
             LOG.error("ProductRepository deleteProduct: {}", e.getMessage());
+            ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
+            info.setAdditionalInfo(ErrorCode.DB_ERROR.name(), e.getMessage());
+            throw new FilipClubException(info, e);
+        }
+    }
+
+    // get ProductTypeEntity by type_id
+    @Override
+    @Transactional
+    public ProductTypeEntity getProductTypeById(long typeId) {
+        Query query = em.createQuery("SELECT a FROM ProductTypeEntity a WHERE a.typeId = :typeId");
+        query.setParameter("typeId", typeId);
+
+        try {
+            @SuppressWarnings("unchecked")
+            List<ProductTypeEntity> result = (List<ProductTypeEntity>) query.getResultList();
+            if (result.isEmpty()) {
+                // no type found
+                ErrorInfo info = new ErrorInfo(ErrorCode.NO_DATA_GIVEN.name());
+                info.setAdditionalInfo("no data fount for typeId:", String.valueOf(typeId));
+                throw new FilipClubException(info);
+            }
+            return result.get(0);
+        } catch (FilipClubException f) {
+            LOG.warn("ProductRepository getProductTypeById: {}", f.getMessage());
+            throw f;
+        } catch (Exception e) {
+            LOG.error("ProductRepository getProductTypeById: {}", e.getMessage());
             ErrorInfo info = new ErrorInfo(ErrorCode.DB_ERROR.name());
             info.setAdditionalInfo(ErrorCode.DB_ERROR.name(), e.getMessage());
             throw new FilipClubException(info, e);
