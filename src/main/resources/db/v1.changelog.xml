@@ -10,6 +10,7 @@
     <include file="classpath:db/changelog/objects/changelog-0.xml" />
     <include file="classpath:db/changelog/objects/changelog-1.xml" />
     <include file="classpath:db/changelog/objects/changelog-2.xml" />
+    <include file="classpath:db/changelog/objects/changelog-3.xml" />
     <include file="classpath:db/changelog/data/data-0.xml" />
     <include file="classpath:db/changelog/data/data-1.xml" />
 </databaseChangeLog>
